@@ -1,0 +1,15 @@
+variables:
+  VERSION_APP: 0.1.0
+
+stages:
+  - build
+
+build:
+  stage: build
+  only:
+    refs:
+      - master
+  script:
+    - cp ./.env.distrib ./.env
+    - docker build --tag browscap-downloader:${VERSION_APP} .
+    - docker run --rm browscap-downloader:${VERSION_APP} php console ping

@@ -20,7 +20,7 @@ class DownloadCommand extends AppCommand
     public function execute(InputInterface $input, OutputInterface $output): int
     {
         try {
-            $dataPath = $this->getDataPath();
+            $this->getDataPath();
         } catch (DataPathException $e) {
             $e->loadOutput($output);
             return 1;
@@ -28,7 +28,7 @@ class DownloadCommand extends AppCommand
 
         try {
             $browscapLocal = $this->getBrowscapLocal();
-            $output->writeln('Browscap local version:' . $browscapLocal->getVersion());
+            $output->writeln('Browscap local version: ' . $browscapLocal->getVersion());
         } catch (BrowscapLocalException $e) {
             $output->writeln('Browscap local not found');
         }
@@ -41,7 +41,7 @@ class DownloadCommand extends AppCommand
             return 0;
         }
 
-        $output->write('Browscap needs to be updated... ');
+        $output->write('Browscap load... ');
 
         $this->downloadBrowscap();
 
@@ -49,7 +49,7 @@ class DownloadCommand extends AppCommand
 
         try {
             $browscapLocal = $this->getBrowscapLocal();
-            $output->writeln('Browscap local version:' . $browscapLocal->getVersion());
+            $output->writeln('Browscap local version: ' . $browscapLocal->getVersion());
         } catch (BrowscapLocalException $e) {
             $output->writeln('<error>Browscap local not found</error>');
             return 1;

@@ -1,0 +1,6 @@
+docker build --tag browscap-downloader:0.0.1 .
+docker run --rm --volume $PWD:/app --user $(id -u):$(id -g) composer:1.10.9 install
+docker run --rm --env DATA_DIR=/app browscap-downloader:0.0.1 php console ping
+docker run --rm --env DATA_DIR=/app browscap-downloader:0.0.1 php console env
+docker run --rm --env DATA_DIR=/app --volume /home/data/browscap-downloader:/app browscap-downloader:0.0.1 php console download
+cat /home/data/browscap-downloader/version.json

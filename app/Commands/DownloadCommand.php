@@ -28,7 +28,6 @@ class DownloadCommand extends AppCommand
 
         try {
             $browscapLocal = $this->getBrowscapLocal();
-
             $output->writeln('Browscap local version:' . $browscapLocal->getVersion());
         } catch (BrowscapLocalException $e) {
             $output->writeln('Browscap local not found');
@@ -36,6 +35,25 @@ class DownloadCommand extends AppCommand
 
         $browscapServer = $this->getBrowscapServer();
         $output->writeln('Browscap server version: ' . $browscapServer->getVersion());
+
+        if (!$this->isBrowscapNeedsUpdated($browscapLocal, $browscapServer)) {
+            $output->writeln('Nothing to update.');
+            return 0;
+        }
+
+        $output->write('Browscap needs to be updated... ');
+
+        $this->downloadBrowscap();
+
+        $output->writeln('Done.');
+
+        try {
+            $browscapLocal = $this->getBrowscapLocal();
+            $output->writeln('Browscap local version:' . $browscapLocal->getVersion());
+        } catch (BrowscapLocalException $e) {
+            $output->writeln('<error>Browscap local not found</error>');
+            return 1;
+        }
 
         return 0;
     }

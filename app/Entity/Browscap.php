@@ -10,6 +10,25 @@ class Browscap
 
     private $hash;
 
+    public function isEmpty(): bool
+    {
+        return empty($this->version);
+    }
+
+    public function toArray()
+    {
+        return [
+            'version' => $this->getVersion(),
+            'date' => $this->getDate()->format(DATE_RSS),
+            'hash' => $this->getHash(),
+        ];
+    }
+
+    public function toJson()
+    {
+        return json_encode($this->toArray());
+    }
+
     public function getVersion(): ?string
     {
         return $this->version;

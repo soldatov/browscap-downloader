@@ -15,7 +15,7 @@ class EnvCommand extends AppCommand
 
     public function execute(InputInterface $input, OutputInterface $output): int
     {
-        $output->writeln('APP_ENV=' . getenv('APP_ENV'));
+        $output->writeln('DATA_DIR=' . getenv('DATA_DIR'));
         return 0;
     }
 }

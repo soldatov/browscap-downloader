@@ -2,6 +2,8 @@
 
 namespace App\Commands;
 
+use App\Commands\Exceptions\BrowscapLocalException;
+use App\Commands\Exceptions\DataPathException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Filesystem;
@@ -17,23 +19,23 @@ class DownloadCommand extends AppCommand
 
     public function execute(InputInterface $input, OutputInterface $output): int
     {
-        $dataPath = getenv('DATA_DIR');
-
-        if (empty($dataPath)) {
-            $output->writeln('<error>Empty DATA_DIR environment.</error>');
-
+        try {
+            $dataPath = $this->getDataPath();
+        } catch (DataPathException $e) {
+            $e->loadOutput($output);
             return 1;
         }
 
-        $filesystem = new Filesystem();
+        try {
+            $browscapLocal = $this->getBrowscapLocal();
 
-        if (!$filesystem->exists($dataPath)) {
-            $output->writeln('<error>' . $dataPath . '</error>');
-            $output->writeln('<error>Data dir not found.</error>');
-            $output->writeln('The parameter is specified in the DATA_DIR environment.');
-
-            return 1;
+            $output->writeln('Browscap local version:' . $browscapLocal->getVersion());
+        } catch (BrowscapLocalException $e) {
+            $output->writeln('Browscap local not found');
         }
+
+        $browscapServer = $this->getBrowscapServer();
+        $output->writeln('Browscap server version: ' . $browscapServer->getVersion());
 
         return 0;
     }

@@ -16,6 +16,19 @@ class AppCommand extends Command
 
     private $browscapServer;
 
+    private static $versions = [
+        'BrowsCapINI',
+        'Full_BrowsCapINI',
+        'Lite_BrowsCapINI',
+        'PHP_BrowsCapINI',
+        'Full_PHP_BrowsCapINI',
+        'Lite_PHP_BrowsCapINI',
+        'BrowsCapXML',
+        'BrowsCapCSV',
+        'BrowsCapJSON',
+        'BrowsCapZIP',
+    ];
+
     protected function getDataPath()
     {
         if (!is_null($this->dataPath)) {

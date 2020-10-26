@@ -5,6 +5,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 use App\Commands\DownloadCommand;
 use App\Commands\EnvCommand;
 use App\Commands\PingCommand;
+use App\Commands\InfoCommand;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Dotenv\Dotenv;
 
@@ -17,4 +18,5 @@ $app = new Application();
 $app->add(new PingCommand());
 $app->add(new EnvCommand());
 $app->add(new DownloadCommand());
+$app->add(new InfoCommand());
 $app->run();

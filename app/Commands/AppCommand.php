@@ -38,7 +38,8 @@ class AppCommand extends Command
         $dataPath = getenv('DATA_DIR');
 
         if (empty($dataPath)) {
-            throw new DataPathException('', 'Empty DATA_DIR environment.');
+            $ds = DIRECTORY_SEPARATOR;
+            $dataPath = __DIR__ . $ds. '..' . $ds . '..' . $ds . 'data';
         }
 
         $filesystem = new Filesystem();

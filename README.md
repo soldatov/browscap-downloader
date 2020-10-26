@@ -14,7 +14,7 @@ Browscap version information.
 php console download
 php console dl
 ```
-Download browscap.ini file from browscap.org
+Download browscap.ini file from browscap.org into DATA_DIR folder.
 
 ### App Dev Commands 
 * `php console env` Print env values.

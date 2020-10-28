@@ -28,13 +28,13 @@ class InfoCommand extends AppCommand
         $browscapLocal = null;
         try {
             $browscapLocal = $this->getBrowscapLocal();
-            $output->writeln('Browscap local version: ' . $browscapLocal->getVersion());
+            $output->writeln('Browscap app local version: ' . $browscapLocal->getVersion());
         } catch (BrowscapLocalException $e) {
-            $output->writeln('Browscap local version: not found');
+            $output->writeln('Browscap app local version: not found');
         }
 
         $browscapServer = $this->getBrowscapServer();
-        $output->writeln('Browscap server version: ' . $browscapServer->getVersion());
+        $output->writeln('Browscap origin server version: ' . $browscapServer->getVersion());
 
         if (!$this->isBrowscapNeedsUpdated($browscapLocal, $browscapServer)) {
             $output->writeln('Nothing to update.');

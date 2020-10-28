@@ -5,6 +5,7 @@ namespace App\Commands;
 use App\Commands\Exceptions\BrowscapLocalException;
 use App\Commands\Exceptions\DataPathException;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -14,6 +15,13 @@ class DownloadCommand extends AppCommand
     {
         $this->setName('download');
         $this->setAliases(['dl']);
+        $this->addOption(
+            'type',
+            't',
+            InputOption::VALUE_OPTIONAL,
+            'Specifies browscap.ini file type.',
+            'Full_PHP_BrowsCapINI'
+        );
         $this->setDescription('Download browscap.ini file from browscap.org');
     }
 
@@ -28,13 +36,13 @@ class DownloadCommand extends AppCommand
 
         try {
             $browscapLocal = $this->getBrowscapLocal();
-            $output->writeln('Browscap local version: ' . $browscapLocal->getVersion());
+            $output->writeln('Browscap app local version: ' . $browscapLocal->getVersion());
         } catch (BrowscapLocalException $e) {
             $output->writeln('Browscap local not found');
         }
 
         $browscapServer = $this->getBrowscapServer();
-        $output->writeln('Browscap server version: ' . $browscapServer->getVersion());
+        $output->writeln('Browscap origin server version: ' . $browscapServer->getVersion());
 
         if (!$this->isBrowscapNeedsUpdated($browscapLocal, $browscapServer)) {
             $output->writeln('Nothing to update.');
@@ -49,7 +57,7 @@ class DownloadCommand extends AppCommand
 
         try {
             $browscapLocal = $this->getBrowscapLocal();
-            $output->writeln('Browscap local version: ' . $browscapLocal->getVersion());
+            $output->writeln('Browscap app local version: ' . $browscapLocal->getVersion());
         } catch (BrowscapLocalException $e) {
             $output->writeln('<error>Browscap local not found</error>');
             return 1;

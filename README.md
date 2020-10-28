@@ -4,22 +4,47 @@ Console application for downloading browscap.ini file and getting info from brow
 ## App Commands 
 
 ### App Info Command
-```
-php console info
-```  
 Browscap version information.
+```
+> php console info
+Browscap app local version: not found
+Browscap origin server version: 6000040
+```
  
 ### App Download Command
+Download browscap.ini file from browscap.org into DATA_DIR folder.  
+Two files will be created. File `browscap.ini` and `version.json`.  
+Default path: `./data/browscap.ini` and `./data/version.json`
+
 ```
-php console download
-php console dl
+> php console download
+Browscap local not found
+Browscap origin server version: 6000040
+Browscap load... Done.
+Browscap app local version: 6000040
+
+> php console info
+Browscap app local version: 6000040
+Browscap origin server version: 6000040
+Nothing to update.
 ```
-Download browscap.ini file from browscap.org into DATA_DIR folder.
+
+Param `--type`. Specifies browscap.ini file type. There are the following types:
+* BrowsCapINI
+* Full_BrowsCapINI
+* Lite_BrowsCapINI
+* PHP_BrowsCapINI
+* Full_PHP_BrowsCapINI (default for application)
+* Lite_PHP_BrowsCapINI
+* BrowsCapXML
+* BrowsCapCSV
+* BrowsCapJSON
+* BrowsCapZIP
 
 ### App Dev Commands 
 * `php console env` Print env values.
 * `php console help` Displays help for a command.
-* `php console list` Lists commands.
+* `php console list` Lists command.
 * `php console ping` Ping command for hello word.
 
 ## App Environments

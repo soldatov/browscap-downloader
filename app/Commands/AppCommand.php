@@ -5,31 +5,19 @@ namespace App\Commands;
 use App\Commands\Exceptions\DataPathException;
 use App\Commands\Exceptions\BrowscapLocalException;
 use App\Entity\Browscap;
+use App\Entity\Type;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\GuzzleException;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
 class AppCommand extends Command
 {
-    private $dataPath;
+    private string $dataPath;
 
-    private $browscapServer;
+    private Browscap $browscapServer;
 
-    private static $versions = [
-        'BrowsCapINI',
-        'Full_BrowsCapINI',
-        'Lite_BrowsCapINI',
-        'PHP_BrowsCapINI',
-        'Full_PHP_BrowsCapINI',
-        'Lite_PHP_BrowsCapINI',
-        'BrowsCapXML',
-        'BrowsCapCSV',
-        'BrowsCapJSON',
-        'BrowsCapZIP',
-    ];
-
-    protected function getDataPath()
+    protected function getDataPath(): string
     {
         if (!is_null($this->dataPath)) {
             return $this->dataPath;
@@ -51,6 +39,13 @@ class AppCommand extends Command
         return $this->dataPath = $dataPath;
     }
 
+    /**
+     * Get information about actual browscap file from source site.
+     * Returns as Browscap
+     * @return Browscap
+     *
+     * @throws GuzzleException
+     */
     protected function getBrowscapServer(): Browscap
     {
         if (!is_null($this->browscapServer)) {
@@ -58,9 +53,11 @@ class AppCommand extends Command
         }
 
         $client = new Client();
+
         $browscap = new Browscap();
         $browscap->setVersion($client->request('GET', 'http://browscap.org/version-number')->getBody()->getContents());
         $browscap->setDateStr($client->request('GET', 'http://browscap.org/version')->getBody()->getContents());
+
         return $this->browscapServer = $browscap;
     }
 
@@ -100,7 +97,7 @@ class AppCommand extends Command
         return false;
     }
 
-    protected function downloadBrowscap()
+    protected function downloadBrowscap(Type $type)
     {
         //http://browscap.org/stream?q=Full_PHP_BrowsCapINI
         //file_put_contents("Tmpfile.zip", fopen("http://someurl/file.zip", 'r'));
@@ -109,7 +106,7 @@ class AppCommand extends Command
 
         $fs->dumpFile(
             $this->getDataPath() . '/browscap.ini',
-            fopen("http://browscap.org/stream?q=Full_PHP_BrowsCapINI", 'r')
+            fopen('http://browscap.org/stream?q=' . $type->getName(), 'r')
         );
 
         $this->getBrowscapServer()->setHash(md5_file($this->getDataPath() . '/browscap.ini'));

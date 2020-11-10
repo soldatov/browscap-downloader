@@ -2,13 +2,36 @@
 
 namespace App\Entity;
 
+use DateTimeImmutable;
+use Exception;
+
 class Browscap
 {
-    private $version;
+    private string $name;
 
-    private $date;
+    private string $version;
 
-    private $hash;
+    private DateTimeImmutable $date;
+
+    private string $hash;
+
+    private Type $type;
+
+    /**
+     * @return string
+     */
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    /**
+     * @param string $name
+     */
+    public function setName(string $name): void
+    {
+        $this->name = $name;
+    }
 
     public function isEmpty(): bool
     {
@@ -21,6 +44,7 @@ class Browscap
             'version' => $this->getVersion(),
             'date' => $this->getDate()->format(DATE_RSS),
             'hash' => $this->getHash(),
+            'type' => $this->getType()->getName(),
         ];
     }
 
@@ -39,17 +63,21 @@ class Browscap
         $this->version = $version;
     }
 
-    public function getDate(): ?\DateTime
+    public function getDate(): DateTimeImmutable
     {
         return $this->date;
     }
 
+    /**
+     * @param string $date
+     * @throws Exception
+     */
     public function setDateStr(string $date): void
     {
-        $this->date = new \DateTime($date);
+        $this->date = new DateTimeImmutable($date);
     }
 
-    public function setDate(\DateTime $date): void
+    public function setDate(DateTimeImmutable $date): void
     {
         $this->date = $date;
     }
@@ -64,8 +92,13 @@ class Browscap
         $this->hash = $hash;
     }
 
-    public function setHashByFile(string $path)
+    public function getType(): Type
     {
-        $this->hash = md5_file($path);
+        return $this->type;
+    }
+
+    public function setType(Type $type): void
+    {
+        $this->type = $type;
     }
 }

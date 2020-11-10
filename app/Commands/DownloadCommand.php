@@ -4,6 +4,8 @@ namespace App\Commands;
 
 use App\Commands\Exceptions\BrowscapLocalException;
 use App\Commands\Exceptions\DataPathException;
+use App\Entity\Type;
+use App\Repository\BrowscapRepository;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -34,26 +36,33 @@ class DownloadCommand extends AppCommand
             return 1;
         }
 
+        if ($input->hasOption('type')) {
+            $type = new Type($input->getOption('type'));
+        } else {
+            $type = new Type();
+        }
+
         try {
-            $browscapLocal = $this->getBrowscapLocal();
-            $output->writeln('Browscap app local version: ' . $browscapLocal->getVersion());
+            $repo = new BrowscapRepository();
+            $browscapLocal = $repo->findFromLocal($type);
+            $output->writeln('Browscap ' . $type->getName() . ' file on local version: ' . $browscapLocal->getVersion());
         } catch (BrowscapLocalException $e) {
-            $output->writeln('Browscap local not found');
+            $output->writeln('Browscap ' . $type->getName() . ' file on local not found');
         }
 
         $browscapServer = $this->getBrowscapServer();
-        $output->writeln('Browscap origin server version: ' . $browscapServer->getVersion());
+        $output->writeln('Browscap file on origin server version: ' . $browscapServer->getVersion());
 
         if (!$this->isBrowscapNeedsUpdated($browscapLocal, $browscapServer)) {
             $output->writeln('Nothing to update.');
             return 0;
         }
 
-        $output->write('Browscap load... ');
+        $output->write('Browscap ' . $type->getName() . ' file version ' . $browscapServer->getVersion() . ' loading... ');
 
-        $this->downloadBrowscap();
+        $this->downloadBrowscap($type);
 
-        $output->writeln('Done.');
+        $output->writeln('Done. Downloaded file ');
 
         try {
             $browscapLocal = $this->getBrowscapLocal();

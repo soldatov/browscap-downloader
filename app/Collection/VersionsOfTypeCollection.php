@@ -2,13 +2,13 @@
 
 namespace App\Collection;
 
-use App\Entity\Version;
+use App\Entity\VersionOfType;
 use Ramsey\Collection\AbstractCollection;
 
-class VersionCollection extends AbstractCollection
+class VersionsOfTypeCollection extends AbstractCollection
 {
     public function getType(): string
     {
-        return Version::class;
+        return VersionOfType::class;
     }
 }

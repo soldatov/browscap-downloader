@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "34f657887add6871d0a949d2def896d3",
+    "content-hash": "7c7a6479917083fee8173a5ca231a6fb",
     "packages": [
         {
             "name": "guzzlehttp/guzzle",
@@ -465,6 +465,95 @@
                 }
             ],
             "time": "2020-09-10T20:58:17+00:00"
+        },
+        {
+            "name": "soldatov/gettype",
+            "version": "v1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/soldatov/gettype.git",
+                "reference": "dba36b0e43e324332e69edeb97b886d8043351b8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/soldatov/gettype/zipball/dba36b0e43e324332e69edeb97b886d8043351b8",
+                "reference": "dba36b0e43e324332e69edeb97b886d8043351b8",
+                "shasum": ""
+            },
+            "require": {
+                "php": "~5.3 || ~7.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Soldatov\\GetType\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Unlicense"
+            ],
+            "authors": [
+                {
+                    "name": "Anatoly Soldatov",
+                    "email": "soldatov.anatoly@gmail.com"
+                }
+            ],
+            "description": "Collection of types that the function gettype() returns.",
+            "keywords": [
+                "gettype",
+                "php"
+            ],
+            "time": "2020-09-16T04:35:33+00:00"
+        },
+        {
+            "name": "soldatov/helpers",
+            "version": "v1.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/soldatov/helpers.git",
+                "reference": "e808d35357c4a959c42bed995cd08f32d976751e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/soldatov/helpers/zipball/e808d35357c4a959c42bed995cd08f32d976751e",
+                "reference": "e808d35357c4a959c42bed995cd08f32d976751e",
+                "shasum": ""
+            },
+            "require": {
+                "ext-json": "*",
+                "ext-mbstring": "*",
+                "php": "^7.3",
+                "soldatov/gettype": "^1.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^9"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Soldatov\\Helpers\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Anatoly Soldatov",
+                    "email": "soldatov.anatoly@gmail.com"
+                }
+            ],
+            "description": "Helpers for string, array, objects, etc.",
+            "keywords": [
+                "array",
+                "helper",
+                "helpers",
+                "json",
+                "php"
+            ],
+            "time": "2020-10-01T11:03:05+00:00"
         },
         {
             "name": "symfony/console",

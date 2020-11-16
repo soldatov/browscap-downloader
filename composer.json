@@ -14,7 +14,8 @@
         "symfony/filesystem": "^5.1",
         "guzzlehttp/guzzle": "^7.0",
         "ext-json": "*",
-        "ramsey/collection": "^1.1"
+        "ramsey/collection": "^1.1",
+        "soldatov/helpers": "^1.1"
     },
     "autoload": {
         "psr-4": {

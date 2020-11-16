@@ -4,6 +4,7 @@ namespace App\Commands;
 
 use App\Commands\Exceptions\BrowscapLocalException;
 use App\Commands\Exceptions\DataPathException;
+use App\Entity\Type;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Filesystem;
@@ -18,28 +19,15 @@ class InfoCommand extends AppCommand
 
     public function execute(InputInterface $input, OutputInterface $output): int
     {
-        try {
-            $this->getDataPath();
-        } catch (DataPathException $e) {
-            $e->loadOutput($output);
-            return 1;
+        $output->writeln('Local cashed versions:');
+
+        foreach (Type::getTypes() as $type) {
+            $type = new Type($type);
+            $version = $this->getFsData()->getVersionOfType($type);
+            $output->writeln('  ' . $type->getName() . ': ' . $version->getVersionAndDate());
         }
 
-        $browscapLocal = null;
-        try {
-            $browscapLocal = $this->getBrowscapLocal();
-            $output->writeln('Browscap app local version: ' . $browscapLocal->getVersion());
-        } catch (BrowscapLocalException $e) {
-            $output->writeln('Browscap app local version: not found');
-        }
-
-        $browscapServer = $this->getBrowscapServer();
-        $output->writeln('Browscap origin server version: ' . $browscapServer->getVersion());
-
-        if (!$this->isBrowscapNeedsUpdated($browscapLocal, $browscapServer)) {
-            $output->writeln('Nothing to update.');
-            return 0;
-        }
+        $output->writeln('Origin server version: ' . $this->getServerData()->getActualVersion()->getVersionAndDate());
 
         return 0;
     }

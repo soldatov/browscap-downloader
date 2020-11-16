@@ -2,118 +2,39 @@
 
 namespace App\Commands;
 
-use App\Commands\Exceptions\DataPathException;
-use App\Commands\Exceptions\BrowscapLocalException;
-use App\Entity\Browscap;
-use App\Entity\Type;
-use GuzzleHttp\Client;
-use GuzzleHttp\Exception\GuzzleException;
+use App\Service\FsData;
+use App\Service\ServerData;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Filesystem\Filesystem;
 
 class AppCommand extends Command
 {
-    private string $dataPath;
+    private FsData $fsData;
 
-    private Browscap $browscapServer;
+    private ServerData $serverData;
 
-    protected function getDataPath(): string
+    public function __construct()
     {
-        if (!is_null($this->dataPath)) {
-            return $this->dataPath;
-        }
+        parent::__construct();
 
-        $dataPath = getenv('DATA_DIR');
-
-        if (empty($dataPath)) {
-            $ds = DIRECTORY_SEPARATOR;
-            $dataPath = __DIR__ . $ds. '..' . $ds . '..' . $ds . 'data';
-        }
-
-        $filesystem = new Filesystem();
-
-        if (!$filesystem->exists($dataPath)) {
-            throw new DataPathException($dataPath, 'Data dir not found.');
-        }
-
-        return $this->dataPath = $dataPath;
+        $this->fsData = FsData::getInstance();
+        $this->serverData = ServerData::getInstance();
     }
 
     /**
-     * Get information about actual browscap file from source site.
-     * Returns as Browscap
-     * @return Browscap
-     *
-     * @throws GuzzleException
+     * @return FsData
      */
-    protected function getBrowscapServer(): Browscap
+    protected function getFsData(): FsData
     {
-        if (!is_null($this->browscapServer)) {
-            return $this->browscapServer;
-        }
-
-        $client = new Client();
-
-        $browscap = new Browscap();
-        $browscap->setVersion($client->request('GET', 'http://browscap.org/version-number')->getBody()->getContents());
-        $browscap->setDateStr($client->request('GET', 'http://browscap.org/version')->getBody()->getContents());
-
-        return $this->browscapServer = $browscap;
+        return $this->fsData;
     }
 
-    protected function getBrowscapLocal(): Browscap
+    /**
+     * @return ServerData
+     */
+    protected function getServerData(): ServerData
     {
-        $fs = new Filesystem();
-        $browscap = new Browscap();
-        $dataPath = $this->getDataPath();
-
-        if (!$fs->exists($dataPath . '/version.json')) {
-            throw new BrowscapLocalException($dataPath . '/version.json', 'File not found');
-        }
-
-        if (!$fs->exists($dataPath . '/browscap.ini')) {
-            throw new BrowscapLocalException($dataPath . '/browscap.ini', 'File not found');
-        }
-
-        $dataVersion = json_decode(file_get_contents($dataPath . '/version.json'), true);
-
-        $browscap->setVersion($dataVersion['version']);
-        $browscap->setDateStr($dataVersion['date']);
-        $browscap->setHash($dataVersion['hash']);
-
-        return $browscap;
+        return $this->serverData;
     }
 
-    protected function isBrowscapNeedsUpdated(?Browscap $local, Browscap $server): bool
-    {
-        if (empty($local) || $local->isEmpty()) {
-            return true;
-        }
 
-        if ($local->getVersion() !== $server->getVersion()) {
-            return true;
-        }
-
-        return false;
-    }
-
-    protected function downloadBrowscap(Type $type)
-    {
-        //http://browscap.org/stream?q=Full_PHP_BrowsCapINI
-        //file_put_contents("Tmpfile.zip", fopen("http://someurl/file.zip", 'r'));
-
-        $fs = new Filesystem();
-
-        $fs->dumpFile(
-            $this->getDataPath() . '/browscap.ini',
-            fopen('http://browscap.org/stream?q=' . $type->getName(), 'r')
-        );
-
-        $this->getBrowscapServer()->setHash(md5_file($this->getDataPath() . '/browscap.ini'));
-
-        $fs->dumpFile(
-            $this->getDataPath() . '/version.json',
-            $this->getBrowscapServer()->toJson()
-        );
-    }
 }

@@ -22,13 +22,26 @@ class Type
         'BrowsCapZIP',
     ];
 
+    private static array $file = [
+        'BrowsCapINI' => 'browscap.ini',
+        'Full_BrowsCapINI' => 'full_asp_browscap.ini',
+        'Lite_BrowsCapINI' => 'lite_asp_browscap.ini',
+        'PHP_BrowsCapINI' => 'php_browscap.ini',
+        'Full_PHP_BrowsCapINI' => 'full_php_browscap.ini',
+        'Lite_PHP_BrowsCapINI' => 'lite_php_browscap.ini',
+        'BrowsCapXML' => 'browscap.xml',
+        'BrowsCapCSV' => 'browscap.csv',
+        'BrowsCapJSON' => 'browscap.json',
+        'BrowsCapZIP' => 'browscap.zip',
+    ];
+
     private static string $defaultType = 'Full_PHP_BrowsCapINI';
 
     private string $name;
 
     public function __construct(string $name = '')
     {
-        if (empty($type)) {
+        if (empty($name)) {
             $name = self::getDefaultType();
         } elseif (!in_array($name, self::getTypes())) {
             throw new BadFileTypeException($name);
@@ -40,6 +53,11 @@ class Type
     public function getName(): string
     {
         return $this->name;
+    }
+
+    public function getFileName(): string
+    {
+        return self::$file[$this->name];
     }
 
     public static function getTypes()
